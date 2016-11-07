@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.jiaxiaoAdmin.dao.OrderDAO">
+
+	
+	
+    
+    <!-- 查询已经支付的订单 -->
+    <select id="viewOrderList" resultType="cn.jiaxiaoAdmin.model.Order">  
+		SELECT orderId,classId,classType,className,areaId,areaInfo,userName,phone,totalPrice,orderTime,orderStatus,payTime,liushuihao
+		FROM tb_order 
+		WHERE orderStatus = '2'
+		ORDER BY payTime DESC
+    </select>
+    
+   
+    <!-- 查询没有支付的订单 -->
+      <select id="noViewOrderList" resultType="cn.jiaxiaoAdmin.model.Order">  
+		SELECT orderId,classId,classType,className,areaId,areaInfo,userName,phone,totalPrice,orderTime,orderStatus,payTime,liushuihao
+		FROM tb_order 
+		WHERE orderStatus = '1'
+		ORDER BY orderTime DESC
+    </select>
+    
+      <!-- 查询所有订单信息 -->
+    <select id="viewOrderAll" resultType="cn.jiaxiaoAdmin.model.Order">  
+		SELECT orderId,classId,classType,className,areaId,areaInfo,userName,phone,totalPrice,orderTime,orderStatus,payTime,payWay,liushuihao
+		FROM tb_order
+    </select>
+    
+    
+    <!-- 根据不同的条件查询订单总数量 -->
+	<select id="selectOrderCount" parameterType="map" resultType="int">
+		SELECT COUNT(1)
+		FROM TB_ORDER
+		<where>
+			<!-- 订单状态 -->
+			<if test="orderStatus != null and orderStatus != ''">
+				AND orderStatus=#{orderStatus}
+			</if>
+			<!-- 支付方式 -->
+			<if test="payWay != null and payWay != ''">
+				AND payWay=#{payWay}
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 根据不同的条件查询订单 -->
+	<select id="selectOrder" parameterType="map" resultType="cn.jiaxiaoAdmin.model.Order">
+		SELECT orderId,classId,classType,className,areaId,areaInfo,userName,phone,totalPrice,orderTime,
+		orderStatus,payTime,payWay,liushuihao
+		FROM TB_ORDER
+		<where>
+			<!-- 订单状态 -->
+			<if test="orderStatus != null and orderStatus != ''">
+				AND orderStatus=#{orderStatus}
+			</if>
+			<!-- 支付方式 -->
+			<if test="payWay != null and payWay != ''">
+				AND payWay=#{payWay}
+			</if>
+		</where>
+		ORDER BY ORDERTIME DESC
+		LIMIT #{pageFrom},#{pageSize}
+	</select>
+	
+    
+</mapper>

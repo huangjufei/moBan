@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.jiaxiaoAdmin.dao.AreaDAO">
+			
+
+
+
+
+	<!-- 根据场地名字,修改纬度,和经度  -->
+	<update id="updateAreaLatAndLng" parameterType="cn.jiaxiaoAdmin.model.Area">	
+		UPDATE tb_area 
+		SET areaLat=#{areaLat},areaLng=#{areaLng}
+		WHERE areaName=#{areaName}
+	</update>
+	
+
+
+	<!-- 根据mark查询场地List,只有部分字段 -->
+	<select id="getAreaIsList" resultType="cn.jiaxiaoAdmin.model.Area">
+		SELECT areaId,areaName,areaAddress,areaLat,areaLng,areaInfo,areaImage,areaNumber
+		FROM tb_area;
+		
+	</select> 
+	
+	<!-- 根据mark查询场地List,只有部分字段 -->
+	<select id="getAreaIsListNotNull" parameterType="string" resultType="cn.jiaxiaoAdmin.model.Area">
+		SELECT areaId,areaName,areaLat,areaLng,areaNumber
+		FROM tb_area where classmark like CONCAT('%',#{0},'%')	
+		
+	</select> 
+	
+	
+	
+	<!-- 根据场地的id 得到对应的场地信息-->
+	<select id="getAreaById" resultType="cn.jiaxiaoAdmin.model.Area">	
+		SELECT areaId,areaName,areaAddress,areaLat,areaLng,areaInfo,areaImage,insertTimeStamp,areaNumber
+		FROM tb_area
+		WHERE areaId = #{areaId}
+	</select>
+	
+
+	
+
+
+	<!-- 根据教练id的集合得到教练对象的集合  -->
+	<select id="getDriverByAreaId"  resultType="cn.jiaxiaoAdmin.model.Driver">
+		SELECT *
+		FROM tb_driver
+		WHERE driverId IN
+	     <foreach collection="list" item="driverIds"  open="(" separator="," close=")">     
+            #{driverIds}      
+         </foreach>      
+	</select>
+	
+	<!-- 根据场地名字模糊搜索场地List -->
+	<select id="getAreaListByName" resultType="cn.jiaxiaoAdmin.model.Area" parameterType="map">
+		SELECT areaId,areaName,areaAddress,areaLat,areaLng,areaInfo,areaImage,areaNumber
+		FROM tb_area
+		<where>
+			<if test="areaName != null and areaName != '' ">
+				AND areaName LIKE CONCAT('%',#{areaName},'%')
+			</if>
+		</where>
+	</select>
+
+
+
+
+
+
+
+
+
+
+	<!-- 得到场地的总条数 -->
+	<select id="getCountArea" resultType="int">
+		SELECT COUNT(*)
+		FROM tb_area
+	</select>
+	
+	<!-- 分页显示一个场地的list -->
+	<select id="getViewAreaList" resultType="cn.jiaxiaoAdmin.model.Area" parameterType="int">
+		SELECT *
+		FROM tb_area
+		<where>
+			<if test="searchAreaName != null and searchAreaName != '' ">
+				areaName LIKE CONCAT ('%',#{searchAreaName},'%')
+			</if>	
+		</where>
+		GROUP BY areaName
+		LIMIT #{startNuber},#{pageSize}
+	</select>
+
+	<!-- 后台,得到一个驾校的list -->
+	<select id="getSchoolList" resultType="cn.jiaxiaoAdmin.model.School">
+		SELECT schoolId,schoolName
+		FROM tb_school
+	</select>
+
+	<select id="addArea" parameterType="cn.jiaxiaoAdmin.model.Area">
+		 INSERT INTO tb_area
+	     (areaId,areaName,areaAddress,areaLat,areaLng,areaInfo,areaImage,insertTimeStamp,areaNumber,classmark)
+	     VALUES
+	     (#{areaId},#{areaName},#{areaAddress},#{areaLat},#{areaLng},#{areaInfo},#{areaImage},
+	     #{insertTimeStamp},#{areaNumber},#{classmark})
+	</select>
+
+	<!-- 插入学校和场地的中间表 -->
+	<insert id="insertSchoolAndArea" parameterType="cn.jiaxiaoAdmin.model.SchoolAreaCenter" >
+		INSERT INTO tb_school_area
+		(school_area_id,schoolId,areaId,schoolName)
+		VALUES
+		(#{school_area_id},#{schoolId},#{areaId},#{schoolName})
+	</insert>
+	
+	<!-- 根据学校id,查询学校 -->
+	<select id="selectSchoolById" resultType="cn.jiaxiaoAdmin.model.School" parameterType="string">
+			SELECT *
+			FROM tb_school
+			WHERE schoolId = #{schoolId}
+	</select>
+
+	<!-- 根据场地的名字查询数据库有有这条记录-->
+	<select id="selectCountByName" parameterType="string" resultType="int">
+		SELECT count(*)
+		FROM tb_area 
+		WHERE areaName=#{areaName}
+	</select>
+		
+	<!-- 根据id,删除一个场地-->
+	<delete id="deleteArea" parameterType="string">
+		DELETE FROM tb_area WHERE areaId = #{areaId}	
+	</delete>
+	
+	<!-- 删除学校和场地的中间表 -->
+	<delete id="deleteSchoolAndArea" parameterType="string">
+		DELETE FROM tb_school_area WHERE areaId = #{areaId}
+	</delete>
+	
+	
+	<!--后台,根据场地id得到对象  -->
+	<select id="selectAreaById" resultType="cn.jiaxiaoAdmin.model.Area">
+		SELECT areaId,areaName,areaAddress,areaLat,areaLng,areaInfo,areaImage,areaNumber,classmark
+		FROM tb_area
+		WHERE areaId = #{areaId}
+	</select>
+	
+	<!-- 根据场地id返回条学校和场地中间表的对象  -->
+	<select id="selectSchoolAndArea"  resultType="cn.jiaxiaoAdmin.model.SchoolAreaCenter">
+		SELECT *
+		FROM tb_school_area
+		WHERE areaId = #{areaId}
+	</select>
+	
+	<!--修改 场地表 -->
+	<update id="updateArea"  parameterType="cn.jiaxiaoAdmin.model.Area" >
+		UPDATE tb_area
+		SET 
+		areaAddress = #{areaAddress},
+		areaImage = #{areaImage},
+		areaInfo = #{areaInfo},
+		areaLat = #{areaLat},
+		areaLng = #{areaLng},
+		areaNumber = #{areaNumber},
+		classmark = #{classmark}
+		WhERE areaId = #{areaId}
+
+	</update>
+	
+	<update id="updateAreaNoImage"  parameterType="cn.jiaxiaoAdmin.model.Area">
+		UPDATE tb_area
+		SET 
+		areaAddress = #{areaAddress},
+		areaInfo = #{areaInfo},
+		areaLat = #{areaLat},
+		areaLng = #{areaLng},
+		areaNumber = #{areaNumber},
+		classmark = #{classmark}
+		WhERE areaId = #{areaId}
+	</update>
+	
+	
+	<!-- 修改中间表 -->
+	<update id="updateSchoolAndArea" parameterType="cn.jiaxiaoAdmin.model.SchoolAreaCenter">
+		UPDATE tb_school_area
+		SET
+		schoolId = #{schoolId},
+		schoolName = #{schoolName}
+		WHERE areaId = #{areaId}
+	</update>
+	
+	
+	<select id="selectSchoolIsNameById" resultType="string" parameterType="string">
+		SELECT schoolName
+		FROM tb_school
+		WHERE schoolId = #{schoolId}
+	</select>
+	
+	
+	
+	
+	<!-- 删除场地和教练之间的中间表-->
+	<delete id="deleteAreaDriverCenterById" parameterType="string">
+		DELETE 
+		FROM tb_area_driver 
+		WHERE area_driver_id = #{area_driver_id}
+	</delete>
+	
+	
+	<!-- 根据场地id查询中间表 -->
+	<select id="selectAreaDriverCenterByAreaId" resultType="cn.jiaxiaoAdmin.model.AreaDriverCenter">
+		SELECT *
+		FROM tb_area_driver
+		WHERE areaId = #{areaId}
+	</select>
+	
+	
+
+</mapper>

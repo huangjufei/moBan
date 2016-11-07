@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.jiaxiaoAdmin.dao.DriverDAO">
+
+
+
+	
+	<!-- 新增一个教练 -->
+	<insert id="insertDriver" parameterType="cn.jiaxiaoAdmin.model.Driver">
+	     INSERT INTO tb_driver
+	     (driverId,driverName,driverAge,beginAge,driverSex,subject,driverGrade,eachPersonImage,passRate,driverInfo)
+	     VALUES
+	     (#{driverId},#{driverName},#{driverAge},#{beginAge},#{driverSex},#{subject},#{driverGrade},#{eachPersonImage},#{passRate},#{driverInfo})
+	</insert>
+	
+
+	<!-- 得到教练的List集合(只有下面4个字段) -->
+	<select id="getDriverIsList" resultType="cn.jiaxiaoAdmin.model.Driver">	
+		SELECT driverId,driverName,driverAge,beginAge,driverSex,subject,driverGrade,idImage,backIdmage,driverImage,permitImage,eachPersonImage,passRate,driverInfo
+		FROM tb_driver
+	</select>
+
+
+
+	<!-- 根据教练的id 得到对应的信息-->
+	<select id="getDriverById" resultType="cn.jiaxiaoAdmin.model.Driver">
+		SELECT
+		driverId,driverName,driverAge,beginAge,driverSex,subject,driverGrade,idImage,backIdmage,driverImage,permitImage,eachPersonImage,passRate,driverInfo
+		FROM tb_driver
+		WHERE driverId = #{driverId}
+	</select>
+
+
+	<!-- 根据名字模糊查询教练 -->
+	<select id="selectLikeByName" parameterType="map" resultType="cn.jiaxiaoAdmin.model.Driver">
+		SELECT driverId,driverName,driverAge,beginAge,driverSex,subject,driverGrade,idImage,backIdmage,driverImage,permitImage,eachPersonImage,passRate,driverInfo
+		FROM tb_driver
+		<where>
+			<!-- 用户名（模糊查询） -->
+			<if test="driverName != null and driverName != ''">
+				driverName LIKE CONCAT('%',#{driverName},'%')
+			</if>
+		</where>
+	</select>
+	
+
+	
+	<!-- 得到教练记录的总条数 -->
+	<select id="getTotalNumber" resultType="int">	
+		SELECT COUNT(*)
+		FROM tb_driver
+	</select>
+	
+	
+	<!--根据教练id修改教练的星级得分  -->
+	<update id="updateGrade">
+		UPDATE tb_driver
+		SET driverGrade = #{currentGrade}
+		WHERE driverId = #{driverId}
+	</update>
+
+		
+	<!-- 分页得到教练的List集合(只有下面4个字段) -->
+	<select id="getDriverList" resultType="cn.jiaxiaoAdmin.model.Driver" parameterType="int">	
+		SELECT driverId,driverName,driverAge,beginAge,driverSex,subject,driverGrade,passRate,driverInfo
+		FROM tb_driver
+		<where>
+			<if test="searchDriverName != null and searchDriverName != '' ">
+				driverName LIKE CONCAT ('%',#{searchDriverName},'%')
+			</if>
+		
+		</where>
+		LIMIT #{start},#{pageSize}	
+	</select>
+	
+	
+	
+	<!-- 根据教练id删除一条教练记录 -->
+	<delete id="deleteDriver" parameterType="string">
+		DELETE
+		FROM tb_driver
+		WHERE driverId = #{driverId}
+	
+	</delete>
+	
+	<!-- 去添加一个教练页面先准备场地的集合 -->
+	<select id="getAreaList" resultType="cn.jiaxiaoAdmin.model.Area">
+		SELECT areaId,areaName
+		FROM tb_area	
+	</select>
+	
+	
+	
+	
+	
+	
+      <!-- 查询出订单总数量 -->
+       <select id="selectDriverCount" parameterType="map" resultType="INTEGER">
+          SELECT COUNT(1)
+		   FROM TB_DRIVER
+		   <where>
+		      <!-- 教练名 -->
+		      <if test="driverNamed != null and driverNamed != ''">
+		         AND driverName=#{driverNamed}
+		      </if>
+		   </where>
+       </select>
+
+
+
+     <!-- 根据不同的条件查询订单 -->
+	<select id="selectDriver" parameterType="map" resultType="cn.jiaxiaoAdmin.model.Driver">
+		SELECT driverId,driverName,driverAge,beginAge,driverSex,subject,driverGrade,passRate,driverInfo
+		FROM TB_DRIVER
+		<where>
+		      <!-- 教练名 -->
+		      <if test="driverNamed != null and driverNamed != ''">
+		         AND driverName=#{driverNamed}
+		      </if>
+		   </where>
+		LIMIT #{pageFrom},#{pageSize}
+	</select>
+	
+	
+	
+	<!-- 保存场地和教练之间的中间表 -->
+	<insert id="insertAreaAndDriver" parameterType="cn.jiaxiaoAdmin.model.AreaDriverCenter">
+		INSERT INTO tb_area_driver
+		(area_driver_id,areaId,driverId)
+		VALUES(#{area_driver_id},#{areaId},#{driverId})
+	</insert>
+	
+	
+	
+	
+	
+	
+	<!-- 后台,根据教练id得到教练对象-->
+	<select id="selectDriverById" resultType="cn.jiaxiaoAdmin.model.Driver">
+		SELECT *
+		FROM tb_driver
+		WHERE driverId = #{driverId}
+	</select>
+	
+	<!-- 后台,根据教练id得到场地id -->
+	<select id="selectAreaDriverCenter" resultType="string">
+		SELECT areaId
+		FROM tb_area_driver
+		WHERE driverId = #{driverId}
+	</select>
+	
+	
+	<!-- 后台,得到一个场地的一个list,只包含id和名字 -->
+	<select id="selectAreaList" resultType="cn.jiaxiaoAdmin.model.Area">
+		SELECT areaId,areaName
+		FROM tb_area
+	</select>
+	
+	
+	
+	<!-- 根据场地id查询这个id是否存在 -->
+	<select id="selectAreaCount" resultType="int">
+		SELECT count(*)
+		FROM tb_area
+		WHERE areaId = #{areaId}
+	</select>
+	
+
+	
+	<!-- 修改教练表,包含个人风采-->
+	<update id="updateDriver" parameterType="cn.jiaxiaoAdmin.model.Driver">
+		UPDATE tb_driver
+		SET
+		driverName = #{driverName},
+		driverAge = #{driverAge},
+		beginAge = #{beginAge},
+		driverSex = #{driverSex},
+		subject = #{subject},
+		driverGrade = #{driverGrade},
+		eachPersonImage = #{eachPersonImage},
+		passRate = #{passRate},
+		driverInfo = #{driverInfo}
+		WHERE driverId = #{driverId}
+	</update>
+	
+	
+	<!-- 修改教练表,不包含个人风采 -->
+	<update id="updateDriverNoImage" parameterType="cn.jiaxiaoAdmin.model.Driver">
+		UPDATE tb_driver
+		SET
+		driverName = #{driverName},
+		driverAge = #{driverAge},
+		beginAge = #{beginAge},
+		driverSex = #{driverSex},
+		subject = #{subject},
+		driverGrade = #{driverGrade},
+		passRate = #{passRate},
+		driverInfo = #{driverInfo}
+		WHERE driverId = #{driverId}
+	</update>
+	
+	
+	
+	<!-- 根据教练id,查出场地和教练的中间表对象 -->
+	<select id="selectAreaDriverCenterByDriverId" resultType="cn.jiaxiaoAdmin.model.AreaDriverCenter">
+		SELECT *
+		FROM tb_area_driver
+		WHERE driverId = #{driverId}
+	</select>
+	
+	<!-- 修改场地和教练之间的中间表-->
+	<update id="updateAreaAndDriver" parameterType="cn.jiaxiaoAdmin.model.AreaDriverCenter">
+		UPDATE tb_area_driver
+		SET
+		areaId = #{areaId}
+		WHERE area_driver_id = #{area_driver_id}
+	</update>
+
+
+</mapper>

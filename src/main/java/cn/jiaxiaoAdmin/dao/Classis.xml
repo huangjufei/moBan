@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jiaxiaoAdmin.dao.ClassisDAO">
+
+
+	
+
+	<!-- 新增一个班级 -->
+	<insert id="insertClassis" parameterType="cn.jiaxiaoAdmin.model.Classis">
+	     INSERT INTO tb_classis
+	     (classId,classType,className,logoImg,pxfwf,djf,dateScope,service,loginIf,classDesc,mark)
+	     VALUES
+	     (#{classId},#{classType},#{className},#{logoImg},#{pxfwf},#{djf},#{dateScope},#{service},#{loginIf},#{classDesc},#{mark})
+	</insert>
+	
+	
+	<resultMap type="map" id="class">
+		<result property="classType" column="classType"/>
+		<collection property="classList" column="classType" javaType="list" select="getClassisByclassid" />
+	</resultMap>
+	
+	<!-- 得到班级的List集合 (这两个字段没有返回 :service,loginIf)-->
+	<select id="getClassisIsList" resultMap="class">	
+		SELECT
+		classType
+		FROM tb_classis GROUP BY classType
+	</select>
+	
+	<select id="getClassisByclassid" resultType="map">	
+		SELECT
+		classId,className,logoImg,pxfwf,djf,dateScope,classDesc,mark
+		FROM tb_classis where classType=#{classType}
+	</select>
+
+
+
+	<!-- 根据班级的id 得到对应的信息-->
+	<select id="getClassisById" resultType="cn.jiaxiaoAdmin.model.Classis">	
+		SELECT
+		classId,classType,className,logoImg,pxfwf,djf,dateScope,service,loginIf,classDesc,mark
+		FROM tb_classis
+		WHERE classId = #{classId}
+	</select>
+
+
+
+
+
+
+</mapper>

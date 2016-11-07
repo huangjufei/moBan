@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jiaxiaoAdmin.dao.AdminDAO">
+	
+	<!-- 修改管理员用户密码 -->
+	<update id="updateAdminPwd" parameterType="cn.jiaxiaoAdmin.model.Admin">
+		UPDATE TB_ADMINUSER SET USERPASSWORD=#{strUserPassword} WHERE ADMINID=#{strAdminId}
+	</update>
+	
+	
+	<!-- 根据数据库主键查询管理员用户 -->
+	<select id="queryAdminById" parameterType="string" resultType="cn.jiaxiaoAdmin.model.Admin">
+		SELECT ADMINID AS strAdminId, USERNAME AS strUserName, USERPASSWORD AS strUserPassword, INSERTTIME AS strInserttime
+		FROM TB_ADMINUSER WHERE ADMINID=#{strAdminId}
+	</select>
+	
+	<!-- 根据用户名查询管理员用户 -->
+	<select id="queryAdminByName" parameterType="string" resultType="cn.jiaxiaoAdmin.model.Admin">
+		SELECT ADMINID AS strAdminId, USERNAME AS strUserName, USERPASSWORD AS strUserPassword
+		FROM TB_ADMINUSER WHERE USERNAME=#{strUserName}
+	</select>
+	
+	
+	<!-- 判断用户名是否在数据库中存在 -->
+	<select id="userNameIsExists" parameterType="cn.jiaxiaoAdmin.model.Admin" resultType="string">
+		SELECT 
+		(CASE WHEN COUNT(1)>0 THEN 'true' ELSE 'false' END) 
+		FROM TB_ADMINUSER WHERE USERNAME=#{strUserName}
+		<!-- 如果主键ID存在，需要排除该条记录本身 -->
+		<if test="strAdminId != null and strAdminId != ''">
+			AND ADMINID != #{strAdminId}
+		</if>
+	</select>
+	
+</mapper>

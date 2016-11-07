@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.jiaxiaoAdmin.dao.SchoolDAO">
+
+
+
+	<!-- 新增一个驾校 -->
+	<insert id="insertSchool" parameterType="cn.jiaxiaoAdmin.model.School">
+	
+		INSERT INTO tb_school
+	     (schoolId,schoolLogo,schoolName,contactPerson,contactPhone,schoolInfo,schoolAddress,schoolImage,schoolGrade,schoolLat,schoolLng,schoolVideo,driverInfo,insertTimeStamp)
+	     VALUES
+	     (#{schoolId},#{schoolLogo},#{schoolName},#{contactPerson},#{contactPhone},#{schoolInfo},#{schoolAddress},#{schoolImage},#{schoolGrade},#{schoolLat},#{schoolLng},#{schoolVideo},#{driverInfo},#{insertTimeStamp})
+
+	</insert>
+	
+	
+	<!-- 根据id,删除一个驾校-->
+	<delete id="deleteSchool" parameterType="string">
+		DELETE FROM tb_school WHERE schoolId = #{schoolId}	
+	</delete>
+
+
+
+
+	<!-- 根据学校的名字查询数据库有有这条记录-->
+	<select id="selectCountByName" parameterType="string" resultType="int">
+		SELECT COUNT(1)
+		FROM tb_school
+		WHERE schoolName=#{schoolName}
+	</select>
+		
+
+	<!-- 根据学校名字,修改纬度,和经度  -->
+	<update id="updateSchoolLatAndLng" parameterType="cn.jiaxiaoAdmin.model.School">
+	
+		UPDATE tb_school 
+		SET schoolLat=#{schoolLat},schoolLng=#{schoolLng}
+		WHERE schoolName=#{schoolName}
+	</update>
+		
+		
+
+		
+
+		
+
+
+	<!-- 根据学校id 返回这id对应全部字段 -->
+	<select id="selectSchoolById" parameterType="string" resultType="cn.jiaxiaoAdmin.model.School">
+		SELECT schoolId,schoolLogo,schoolName,contactPerson,contactPhone,schoolInfo,schoolAddress,schoolImage,schoolGrade,schoolLng,schoolLat,schoolVideo,driverInfo
+		FROM tb_school 
+		WHERE schoolId=#{schoolId}
+	</select>
+	
+	
+	
+	
+	<!-- 后台得到学校集合 -->	
+	<select id="getSchoolList" resultType="cn.jiaxiaoAdmin.model.School">
+		SELECT schoolId,schoolLogo,schoolName,contactPerson,contactPhone,schoolInfo,schoolAddress,schoolImage,schoolGrade,schoolLng,schoolLat,schoolVideo,driverInfo
+		FROM tb_school	
+	</select>
+	
+	
+	<!-- 得到学校集合 -->
+	<select id="querySchoolList" resultType="cn.jiaxiaoAdmin.model.School">	
+		SELECT schoolId,schoolName,schoolLng,schoolLat
+		FROM tb_school		
+	</select>
+	
+	<!-- 根据学校的id得到一个学校信息 -->
+	<select id="getSchooById" resultType="cn.jiaxiaoAdmin.model.School" parameterType="string">
+		SELECT schoolId,schoolLogo,schoolName,contactPerson,contactPhone,schoolInfo,schoolAddress,schoolImage,schoolGrade,schoolLng,schoolLat,schoolVideo,driverInfo
+		FROM tb_school
+		WHERE schoolId = #{schoolId}
+	</select>
+
+	
+	
+	
+	
+	<!-- 得到驾校的总条数 -->
+	<select id="getCountSchool" resultType="int">
+		SELECT COUNT(*)
+		FROM tb_school
+	</select>
+	
+	<!-- 分页显示一个驾校的list -->
+	<select id="getViewSchoolList" resultType="cn.jiaxiaoAdmin.model.School" parameterType="int">
+		SELECT *
+		FROM tb_school
+		<where>
+			<if test="searchSchoolName != null and searchSchoolName != '' ">
+				schoolName LIKE CONCAT ('%',#{searchSchoolName},'%')
+			</if>
+		
+		</where>
+		GROUP BY schoolName
+		LIMIT #{startNuber},#{pageSize}
+	</select>
+	
+	
+	<!-- 修改驾校logo,图片,视频,信息 -->
+	<update id="updateSchool"  parameterType="cn.jiaxiaoAdmin.model.School" >
+		UPDATE tb_school 
+		SET 
+		schoolLogo=#{schoolLogo},
+		contactPerson=#{contactPerson},
+		contactPhone=#{contactPhone},
+		schoolInfo=#{schoolInfo},
+		schoolAddress=#{schoolAddress},
+		schoolImage=#{schoolImage},
+		schoolGrade=#{schoolGrade},
+		schoolLng=#{schoolLng},
+		schoolLat=#{schoolLat},
+		schoolVideo=#{schoolVideo},
+		driverInfo=#{driverInfo}
+		WHERE schoolId = #{schoolId}
+	</update>
+	
+	
+	
+	<!--  根据驾校id查询中间表,得到一个集合 -->
+	<select id="selectSchoolAndAreaBySchoolId" resultType="cn.jiaxiaoAdmin.model.SchoolAreaCenter" parameterType="string">
+		SELECT *
+		FROM tb_school_area
+		WHERE schoolId = #{schoolId}
+	</select>
+	
+	<!--删除场地信息 -->
+	<delete id="deleteArea" parameterType="string" >
+		DELETE FROM tb_area WHERE areaId = #{areaId}
+	</delete>
+	
+	<!-- 根据中间表id删除中间表关于驾校的信息 -->
+	<delete id="deleteSchoolAndAreaById" parameterType="string">
+		DELETE FROM tb_school_area WHERE school_area_id = #{school_area_id}
+	</delete>
+	
+	
+	
+	
+	<!-- 根据学校id,修改学校的信息,只包含展示图片-->
+	<update id="updateSchoolImage" parameterType="cn.jiaxiaoAdmin.model.School">
+		UPDATE tb_school 
+		SET
+		contactPerson=#{contactPerson},
+		contactPhone=#{contactPhone},
+		schoolInfo=#{schoolInfo},
+		schoolAddress=#{schoolAddress},
+		schoolImage=#{schoolImage},
+		schoolGrade=#{schoolGrade},
+		schoolLng=#{schoolLng},
+		schoolLat=#{schoolLat},
+		driverInfo=#{driverInfo}
+		WHERE schoolId = #{schoolId}
+	</update>
+	
+	
+	<!-- 根据学校id,修改学校的信息,不包含 logo,图片,视频-->
+	<update id="updateSchoolNoFiles" parameterType="cn.jiaxiaoAdmin.model.School">
+		UPDATE tb_school 
+		SET
+		contactPerson=#{contactPerson},
+		contactPhone=#{contactPhone},
+		schoolInfo=#{schoolInfo},
+		schoolAddress=#{schoolAddress},
+		schoolGrade=#{schoolGrade},
+		schoolLng=#{schoolLng},
+		schoolLat=#{schoolLat},
+		driverInfo=#{driverInfo}
+		WHERE schoolId = #{schoolId}
+	</update>
+	
+	
+	
+	
+	
+	
+	<!-- 得到所有的场地和对应的总数
+	<select id="querySchoolById" parameterType="string" resultType="com.jiaxiao.model.School">
+		SELECT ts.schoolName, ta.area, COUNT(1) 
+		FROM tb_area ta, tb_school ts
+		WHERE ta.schoolId=ts.schoolId 
+		GROUP BY ta.area; 
+	</select>
+	-->
+
+</mapper>
+
+
+
+
