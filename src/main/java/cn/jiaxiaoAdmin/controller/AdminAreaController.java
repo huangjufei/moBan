@@ -35,7 +35,6 @@ public class AdminAreaController {
 
 
 	/**
-	 * 阿斯顿发速度发斯蒂芬
 	 * @描述：得到一个场地的list,带分页功能
 	 * @作者:黄举飞
 	 * @部门：伏守科技项目开发部
@@ -48,9 +47,8 @@ public class AdminAreaController {
 	public ModelAndView getViewAreaList(Page<Area> page, HttpServletRequest request, HttpServletResponse response,String searchAreaName) {
 
 		
-		Date d = new Date();
 		ModelAndView mav = new ModelAndView("admin/viewAreaList");
-		//是的发送到
+
 		boolean flag = true;
 
 		if (flag) {
