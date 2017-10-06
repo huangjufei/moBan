@@ -80,7 +80,7 @@ public class DateTool {
 	}
 	
 	/**
-	 * 
+	 * huangjufe
 	 * @描述：把yyyy-MM-dd HH:mm:ss格式的字符串转换为日期格式
 	 * @作者:丁洪星 
 	 * @部门：伏守科技项目开发部
@@ -90,8 +90,7 @@ public class DateTool {
 	 * @return date
 	 * @throws ParseException 
 	 */
-	public static Date parseDate(String dateString) throws ParseException {
-		
+	public static Date parseDate(String dateString) throws ParseException {	
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = format.parse(dateString);
 		return date;
