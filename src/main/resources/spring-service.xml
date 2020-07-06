@@ -9,17 +9,20 @@
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx.xsd">
+        
     <!-- 扫描service包下所有使用注解的类型 -->
     <context:component-scan base-package="cn.jiaxiaoAdmin.service"/>
 
-    <!-- 配置事务管理器 -->
+
+
+    <!-- 配置事务管理器 开始-->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <!-- 注入数据库连接池 -->
+        <!-- 注入数据库连接池 这里的ref也是可以链接到dao的配置的-->
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
 	<!-- 配置基于注解的声明式事务, 默认使用注解来管理事务行为 -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
-
+    <!-- 配置事务管理器 结束-->
 
 </beans>

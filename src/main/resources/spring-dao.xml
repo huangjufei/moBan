@@ -41,9 +41,8 @@
 
 
 
-	<!-- spring整合mybatis就下面2步: -->
+	<!-- mybatis开始 -->
 
-	<!-- 2. mybatis的SqlSession工厂 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
 		
@@ -60,16 +59,19 @@
 			</props>
 		</property>
 	</bean>
+	
 
 	<!--3,配置扫描DAO接口包,动态实现DAO接口,注入到Spring 容器中  -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 		<property name="basePackage" value="cn.jiaxiaoAdmin.dao"></property>
 	</bean>
+	
+	<!-- mybatis结束  -->
 
 
 
-	<!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->
+	<!-- 上传 开始  -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="defaultEncoding" value="UTF-8" />
@@ -92,11 +94,12 @@
 		</property>
 	</bean>
 
+	<!-- 上传 结束  -->
 
 
 
-
-	<!-- redis 相关配置 -->
+	<!-- redis 开始 -->
+	
 	<!-- 注意此处注入的是JedisPoolConfig，说明SDR还依赖与Jedis -->
 	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxIdle" value="${redis.maxIdle}" />
@@ -125,9 +128,7 @@
 		</property>
 	</bean>
 
-
-
-
+	<!-- redis 结束 -->
 
 
         

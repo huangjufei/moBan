@@ -29,27 +29,24 @@ public class AdminDriverController {
 	@Resource
 	private DriverService driverService;
 
-
-
 	/**
 	 * 
 	 * @描述：得到教练的集合
 	 * @作者:黄举飞
-	 * @部门：伏守科技项目开发部
-	 * @日期： 2016年6月26日  下午8:28:00
-	 * @版本： V1.0 
+	 * @部门：伏守科技项目开发部 @日期： 2016年6月26日 下午8:28:00 @版本： V1.0
 	 * @return
 	 */
 
 	@RequestMapping("getViewDriverList")
-	public ModelAndView getDriverList(Page<Driver> page, HttpServletRequest request, HttpServletResponse response,String searchDriverName) {
+	public ModelAndView getDriverList(Page<Driver> page, HttpServletRequest request, HttpServletResponse response,
+			String searchDriverName) {
 		ModelAndView mav = new ModelAndView("admin/viewDriverList");
 
 		boolean flag = true;
 		if (flag) {
 			try {
 
-				Page<Driver> pages = driverService.getDriverList(page,searchDriverName);
+				Page<Driver> pages = driverService.getDriverList(page, searchDriverName);
 				mav.addObject("pages", pages);
 				return mav;
 
@@ -68,9 +65,7 @@ public class AdminDriverController {
 	 * 
 	 * @描述：删除一个教练信息
 	 * @作者:黄举飞
-	 * @部门：伏守科技项目开发部
-	 * @日期： 2016年6月24日  下午2:25:15
-	 * @版本： V1.0 
+	 * @部门：伏守科技项目开发部 @日期： 2016年6月24日 下午2:25:15 @版本： V1.0
 	 * @param AreaId
 	 * @return
 	 */
@@ -97,7 +92,7 @@ public class AdminDriverController {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				//去错误页面
+				// 去错误页面
 				return mav;
 			}
 
@@ -114,9 +109,7 @@ public class AdminDriverController {
 	 * 
 	 * @描述：转发去添加教练页面
 	 * @作者:黄举飞
-	 * @部门：伏守科技项目开发部
-	 * @日期： 2016年6月21日  下午8:47:44
-	 * @版本： V1.0 
+	 * @部门：伏守科技项目开发部 @日期： 2016年6月21日 下午8:47:44 @版本： V1.0
 	 * @return
 	 */
 	@RequestMapping("addDriverPage")
@@ -125,7 +118,7 @@ public class AdminDriverController {
 		ModelAndView mav = new ModelAndView("admin/addDriver");
 
 		boolean flag = true;
-		
+
 		if (flag) {
 			try {
 				areas = driverService.getAreaList();
@@ -135,7 +128,7 @@ public class AdminDriverController {
 					return mav;
 				}
 
-				//mav.addObject("driver", new Driver());
+				// mav.addObject("driver", new Driver());
 
 				mav.addObject("areas", areas);
 
@@ -155,9 +148,7 @@ public class AdminDriverController {
 	 * 
 	 * @描述：后台保存教练
 	 * @作者:黄举飞
-	 * @部门：伏守科技项目开发部
-	 * @日期： 2016年6月14日  下午5:46:59
-	 * @版本： V1.0 
+	 * @部门：伏守科技项目开发部 @日期： 2016年6月14日 下午5:46:59 @版本： V1.0
 	 * @param derver :教练对象
 	 * @param areaId :场地id
 	 * @return
@@ -190,7 +181,7 @@ public class AdminDriverController {
 				}
 			}
 
-			//判断年龄
+			// 判断年龄
 			if (0 == driver.getDriverAge()) {
 				return mav.addObject("error", "教练的年龄不能为空");
 			} else {
@@ -206,7 +197,7 @@ public class AdminDriverController {
 
 			}
 
-			//判断驾龄
+			// 判断驾龄
 			if (StringTools.isEmpty(driver.getBeginAge())) {
 				return mav.addObject("error", "教练的驾龄不能为空");
 			} else {
@@ -216,7 +207,7 @@ public class AdminDriverController {
 				}
 			}
 
-			//判断性别
+			// 判断性别
 			if (StringTools.isEmpty(driver.getDriverSex() + "")) {
 				return mav.addObject("error", "性别不能为空");
 			} else {
@@ -234,7 +225,7 @@ public class AdminDriverController {
 				return mav.addObject("error", "请选择教练的等级");
 			}
 
-			//判断学员通过率
+			// 判断学员通过率
 			if (StringTools.isEmpty(driver.getPassRate() + "")) {
 				return mav.addObject("error", "学员通过率不能为空");
 			} else {
@@ -244,7 +235,7 @@ public class AdminDriverController {
 				}
 			}
 
-			//简介
+			// 简介
 			if (StringTools.isEmpty(driver.getDriverInfo())) {
 				return mav.addObject("error", "教练的简介不能为空");
 			} else {
@@ -257,7 +248,7 @@ public class AdminDriverController {
 
 				int len = files.length;
 
-				//检查多选图片上传的数量
+				// 检查多选图片上传的数量
 				if (len > FileTools.IMAGENUMBER) {
 					return mav.addObject("error", "多选图片的上传数量不能大于" + FileTools.IMAGENUMBER + "张");
 				}
@@ -294,7 +285,7 @@ public class AdminDriverController {
 			}
 
 			try {
-				//保存教练
+				// 保存教练
 				int ii = driverService.addDriver(driver, areaId, files);
 
 				if (ii == -2) {
@@ -304,7 +295,7 @@ public class AdminDriverController {
 					return mav.addObject("error", "上传的图片为空!");
 				}
 				if (ii == 1) {
-					//成功返回
+					// 成功返回
 					return mav.addObject("ok", "恭喜你,添加成功!");
 				} else {
 					return mav.addObject("error", "保存教练未知错误");
@@ -326,9 +317,7 @@ public class AdminDriverController {
 	 * 
 	 * @描述：根据教练id,查询教练对象,然后去修改页面
 	 * @作者:黄举飞
-	 * @部门：伏守科技项目开发部
-	 * @日期： 2016年6月23日  上午9:54:37
-	 * @版本： V1.0 
+	 * @部门：伏守科技项目开发部 @日期： 2016年6月23日 上午9:54:37 @版本： V1.0
 	 * @param schoolId
 	 * @return
 	 */
@@ -348,16 +337,16 @@ public class AdminDriverController {
 			try {
 				Map<String, Object> map = new HashMap<>();
 
-				//通过教练id 去得到教练对象和场地id和名字
+				// 通过教练id 去得到教练对象和场地id和名字
 				map = driverService.selectDriverById(driverId);
 
-				//获取教练
+				// 获取教练
 				Driver driver = (Driver) map.get("driver");
 				if (driver == null) {
 					return mav.addObject("error", "数据库种没有查到该教练");
 				}
 
-				//获取场地id
+				// 获取场地id
 				String areaIds = (String) map.get("areaId");
 				if (StringTools.isEmpty(areaIds)) {
 					mav.addObject("error", "当前教练没有关联任何场地,可能原来的场地不存在了");
@@ -390,15 +379,12 @@ public class AdminDriverController {
 
 	/**
 	 * 
-	 * @描述：修改教练信息后,点击提交,保存修改后的信息.
-	 * @作者:黄举飞
-	 * @部门：伏守科技项目开发部
-	 * @日期： 2016年6月23日  上午9:54:37
-	 * @版本： V1.0 
+	 * @描述：修改教练信息后,点击提交,保存修改后的信息. @作者:黄举飞
+	 * @部门：伏守科技项目开发部 @日期： 2016年6月23日 上午9:54:37 @版本： V1.0
 	 * @param AreaId : 场地id
 	 * @return
-	 * @throws Exception 
-	*/
+	 * @throws Exception
+	 */
 
 	@RequestMapping("updateDriver")
 	public ModelAndView updateDriver(Driver newDriver, String areaId, @RequestParam("files") MultipartFile[] files,
@@ -428,7 +414,7 @@ public class AdminDriverController {
 				}
 			}
 
-			//判断年龄
+			// 判断年龄
 			if (0 == newDriver.getDriverAge()) {
 				return mav.addObject("error", "教练的年龄不能为空");
 			} else {
@@ -444,7 +430,7 @@ public class AdminDriverController {
 
 			}
 
-			//判断驾龄
+			// 判断驾龄
 			if (StringTools.isEmpty(newDriver.getBeginAge())) {
 				return mav.addObject("error", "教练的驾龄不能为空");
 			} else {
@@ -454,7 +440,7 @@ public class AdminDriverController {
 				}
 			}
 
-			//判断性别
+			// 判断性别
 			if (StringTools.isEmpty(newDriver.getDriverSex() + "")) {
 				return mav.addObject("error", "性别不能为空");
 			} else {
@@ -472,7 +458,7 @@ public class AdminDriverController {
 				return mav.addObject("error", "请选择教练的等级");
 			}
 
-			//判断学员通过率
+			// 判断学员通过率
 			if (StringTools.isEmpty(newDriver.getPassRate() + "")) {
 				return mav.addObject("error", "学员通过率不能为空");
 			} else {
@@ -482,7 +468,7 @@ public class AdminDriverController {
 				}
 			}
 
-			//简介
+			// 简介
 			if (StringTools.isEmpty(newDriver.getDriverInfo())) {
 				return mav.addObject("error", "教练的简介不能为空");
 			} else {
@@ -497,7 +483,7 @@ public class AdminDriverController {
 
 				int len = files.length;
 
-				//检查多选图片上传的数量
+				// 检查多选图片上传的数量
 				if (len > FileTools.IMAGENUMBER) {
 					return mav.addObject("error", "多选图片的上传数量不能大于" + FileTools.IMAGENUMBER + "张");
 				}
@@ -505,7 +491,7 @@ public class AdminDriverController {
 				for (int i = 0; i < len; i++) {
 
 					if (files[i].isEmpty()) {
-						//表示不上传
+						// 表示不上传
 						tag = true;
 					} else {
 
@@ -536,7 +522,7 @@ public class AdminDriverController {
 
 			try {
 
-				//参数:教练对象,图片,场地id,标记
+				// 参数:教练对象,图片,场地id,标记
 				int i = driverService.updateDriver(newDriver, files, areaId, tag);
 
 				if (i == -1) {

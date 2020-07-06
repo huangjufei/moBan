@@ -11,24 +11,18 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
 
-	<!-- SpringMvc配置文件: 
-	1,开始springMvc的注解功能,
-        (1)自动注册DefaultAnnotationHandlerMapping,AnnotationMethodHandlerAdapter
-        (2)提供一系列:数据绑定,数字和日期的format @NumberFormat,@DataTimeFormat,xml,json默认读写支持.   
-	2,自动扫描的包(哪些包下使用到了SpringMvc的注解都需要配置上) 
-	3,不需要被视图解析器解析的路径
-	4,视图解析器再次对视图路径进行统一拼装
-		上面3个为常用,其它为选择 
+	<!-- SpringMvc配置文件  -->
 		
-		-->
-		
-	<!--1,开启springMvc的注解功能  -->	
+	<!--开启springMvc的注解功能  -->	
 	<mvc:annotation-driven/>
-	<!--2, 自动扫描 -->
+	
+	<!-- 只扫描controller层 -->
 	<context:component-scan base-package="cn.jiaxiaoAdmin.controller" />
-	<!--3, 访问静态资源(不拦截该资源) -->
+	
+	<!-- 访问静态资源(不拦截该资源) -->
 	<mvc:resources location="/static/" mapping="/static/**" />
-	<!--4,对视图路径进行统一拼装  -->
+	
+	<!-- 对视图路径进行统一拼装  -->
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/" />
